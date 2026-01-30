@@ -84,8 +84,8 @@ func TestJSONParser_Parse(t *testing.T) {
 			wantParseError: false,
 		},
 		{
-			name: "nested object",
-			line: `{"user": {"name": "alice"}}`,
+			name:           "nested object",
+			line:           `{"user": {"name": "alice"}}`,
 			wantParseError: false,
 		},
 		{

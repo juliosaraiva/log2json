@@ -23,11 +23,11 @@ func runTest(t *testing.T, cfg Config, input string) (stdout string, stderr stri
 // helper to parse each line of NDJSON output into maps
 func parseNDJSON(t *testing.T, output string) []map[string]any {
 	t.Helper()
-	var results []map[string]any
 	lines := strings.Split(strings.TrimSpace(output), "\n")
 	if len(lines) == 1 && lines[0] == "" {
 		return nil
 	}
+	results := make([]map[string]any, 0, len(lines))
 	for i, line := range lines {
 		var m map[string]any
 		if err := json.Unmarshal([]byte(line), &m); err != nil {

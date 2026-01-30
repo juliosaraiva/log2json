@@ -228,7 +228,7 @@ func runPipeline(cfg Config, input io.Reader, output io.Writer, errOutput io.Wri
 		OmitEmpty:     cfg.OmitEmpty,
 	}
 	emit := emitter.New(output, emitOpts)
-	defer emit.Close()
+	defer func() { _ = emit.Close() }()
 
 	// Create stream reader
 	streamReader := reader.New(input)
@@ -243,7 +243,7 @@ func runPipeline(cfg Config, input io.Reader, output io.Writer, errOutput io.Wri
 		// Handle read errors
 		if line.Err != nil {
 			if !cfg.Quiet {
-				fmt.Fprintf(errOutput, "read error at line %d: %v\n", line.Number, line.Err)
+				_, _ = fmt.Fprintf(errOutput, "read error at line %d: %v\n", line.Number, line.Err)
 			}
 			errorCount++
 			continue
@@ -253,7 +253,7 @@ func runPipeline(cfg Config, input io.Reader, output io.Writer, errOutput io.Wri
 		entry, err := registry.Parse(line.Text)
 		if err != nil {
 			if !cfg.Quiet {
-				fmt.Fprintf(errOutput, "parse error at line %d: %v\n", line.Number, err)
+				_, _ = fmt.Fprintf(errOutput, "parse error at line %d: %v\n", line.Number, err)
 			}
 			errorCount++
 			continue
@@ -265,7 +265,7 @@ func runPipeline(cfg Config, input io.Reader, output io.Writer, errOutput io.Wri
 		// Emit JSON
 		if err := emit.Emit(entry); err != nil {
 			if !cfg.Quiet {
-				fmt.Fprintf(errOutput, "output error at line %d: %v\n", line.Number, err)
+				_, _ = fmt.Fprintf(errOutput, "output error at line %d: %v\n", line.Number, err)
 			}
 			errorCount++
 		}
@@ -273,7 +273,7 @@ func runPipeline(cfg Config, input io.Reader, output io.Writer, errOutput io.Wri
 
 	// Print summary in verbose mode
 	if cfg.Verbose {
-		fmt.Fprintf(errOutput, "processed %d lines, %d errors\n", lineCount, errorCount)
+		_, _ = fmt.Fprintf(errOutput, "processed %d lines, %d errors\n", lineCount, errorCount)
 	}
 
 	return nil
