@@ -20,6 +20,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
+          cache: false
 
       - name: Build
         run: go build -v ./...
@@ -47,6 +48,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.23'
+          cache: false
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
@@ -62,6 +64,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.23'
+          cache: false
 
       - name: Build linux/amd64
         run: GOOS=linux GOARCH=amd64 go build -o log2json-linux-amd64 ./cmd/log2json
@@ -74,3 +77,14 @@ jobs:
 
       - name: Build windows/amd64
         run: GOOS=windows GOARCH=amd64 go build -o log2json-windows-amd64.exe ./cmd/log2json
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: |
+            log2json-linux-amd64
+            log2json-darwin-amd64
+            log2json-darwin-arm64
+            log2json-windows-amd64.exe
+          retention-days: 7
