@@ -1,0 +1,6 @@
+2024-01-15 10:30:45 INFO Application started successfully
+2024-01-15T10:30:46Z ERROR Something failed unexpectedly
+INFO 2024-01-15 10:30:47 Processing request completed
+[WARN] Configuration file missing, using defaults
+ERROR: disk full, cannot write to log
+DEBUG - verbose debug message here

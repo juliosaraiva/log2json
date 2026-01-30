@@ -1,0 +1,6 @@
+Jan 15 10:30:45 webserver nginx[1234]: 192.168.1.100 - - "GET /api/users HTTP/1.1" 200 1532
+Jan 15 10:30:46 webserver sshd[5678]: Accepted password for admin from 10.0.0.5 port 22 ssh2
+Jan 15 10:30:47 dbserver mysql[9012]: Query completed in 0.023s
+Jan 15 10:30:48 appserver app[3456]: [INFO] User login successful user_id=123
+Jan 15 10:30:49 webserver nginx[1234]: 192.168.1.101 - - "POST /api/orders HTTP/1.1" 201 256
+Jan 15 10:30:50 appserver app[3456]: [ERROR] Database connection timeout after 30s

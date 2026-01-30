@@ -1,0 +1,5 @@
+{"timestamp":"2024-01-15T10:30:45Z","level":"INFO","message":"Application started","version":"1.2.3"}
+{"timestamp":"2024-01-15T10:30:46Z","level":"DEBUG","message":"Loading configuration","file":"config.yaml"}
+{"timestamp":"2024-01-15T10:30:47Z","level":"INFO","message":"Database connected","host":"db.example.com","port":5432}
+{"timestamp":"2024-01-15T10:30:48Z","level":"WARN","message":"High memory usage","used_mb":7500,"total_mb":8192}
+{"timestamp":"2024-01-15T10:30:49Z","level":"ERROR","message":"Request failed","status":500,"path":"/api/data","error":"timeout"}

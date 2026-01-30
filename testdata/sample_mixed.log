@@ -1,0 +1,5 @@
+{"level":"info","msg":"json line","ts":"2024-01-15T10:30:45Z"}
+Jan 15 10:30:46 webserver nginx[1234]: GET /index.html 200
+level=info msg="kv line" port=8080 env=production
+192.168.1.1 - admin [15/Jan/2024:10:30:48 +0000] "GET /dashboard HTTP/1.1" 200 5432 "http://example.com" "Mozilla/5.0"
+2024-01-15 10:30:49 INFO Generic format log message

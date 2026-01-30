@@ -1,0 +1,5 @@
+time=2024-01-15T10:30:45Z level=info msg="Server started" port=8080 env=production
+time=2024-01-15T10:30:46Z level=debug msg="Processing request" method=GET path=/api/users duration=0.023
+time=2024-01-15T10:30:47Z level=info msg="User authenticated" user_id=12345 ip="192.168.1.100"
+time=2024-01-15T10:30:48Z level=warn msg="Slow query detected" query_time=2.5 table=orders
+time=2024-01-15T10:30:49Z level=error msg="Connection refused" host=cache.local port=6379 retry=3

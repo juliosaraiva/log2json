@@ -1,0 +1,22 @@
+# Build artifacts
+/build/
+/log2json
+
+# Test artifacts
+*.test
+*.out
+coverage.out
+coverage.html
+coverage.txt
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE and tool files
+.idea/
+.vscode/
+.claude/
+*.swp
+*.swo
+*~
