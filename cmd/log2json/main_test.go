@@ -139,6 +139,31 @@ func TestIntegration_KVFormat(t *testing.T) {
 	}
 }
 
+func TestIntegration_NonFiniteLogValues(t *testing.T) {
+	input := "value=NaN\nvalue=+Inf\nvalue=-Inf\nvalue=1.25\n"
+	for _, tt := range []struct {
+		name string
+		cfg  Config
+	}{
+		{"key-value", Config{Format: "kv"}},
+		{"custom pattern", Config{Pattern: `^value=(?P<value>\S+)$`}},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			stdout, stderr := runTest(t, tt.cfg, input)
+			records := parseNDJSON(t, stdout)
+			want := []any{"NaN", "+Inf", "-Inf", 1.25}
+			if len(records) != len(want) || stderr != "" {
+				t.Fatalf("got %d records, want %d; stderr: %q", len(records), len(want), stderr)
+			}
+			for i, value := range want {
+				if got := records[i]["value"]; got != value {
+					t.Errorf("record %d value = %#v, want %#v", i+1, got, value)
+				}
+			}
+		})
+	}
+}
+
 func TestIntegration_ForcedFormat(t *testing.T) {
 	input := `Jan 15 10:30:45 myhost prog[99]: hello world`
 

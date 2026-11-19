@@ -14,6 +14,28 @@
 5. Commit and push
 6. Open a pull request against `main`
 
+### Layered review pilot
+
+For an enrolled change, open a draft using the [pilot PR template](.github/PULL_REQUEST_TEMPLATE/layered-review.md).
+Copy it into the PR description and link evidence from the tested revision.
+Run the two [review passes](REVIEW.md) before requesting human review. Check
+the new head after a push and mark stale evidence. No pilot tier grants merge
+authority. Existing repository rules decide who can approve.
+
+Record the proposed tier and whether automation alone would have cleared that
+commit **before** a human responds. Record material corrections humans catch
+on that revision. A change to parsed types or output is ordinary at minimum.
+Release automation, CI permissions and irreversible effects need owner review.
+
+Compare consecutive pilot PRs with a comparable baseline by tier. Track median
+and p95 time waiting for human review, active author/reviewer minutes, review
+rounds and unique findings fixed, dismissed or open. Link released commits to
+unplanned reverts, incidents, severity, pages and responder minutes. Report raw
+counts and rates per 100 merged PRs over an equal observation window. Mark
+unreleased changes pending. Extend the pilot if data is sparse. Any proposal
+to reduce approvals needs a separate maintainer decision after a rollback drill
+and evidence of time saved without worse release or on-call outcomes.
+
 ## Make Targets
 
 | Target         | Description                              |
