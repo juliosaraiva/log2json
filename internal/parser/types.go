@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"math"
 	"strconv"
 	"strings"
 )
@@ -14,8 +15,8 @@ func inferType(s string) any {
 		return i
 	}
 
-	// Try float
-	if f, err := strconv.ParseFloat(s, 64); err == nil {
+	// JSON cannot encode non-finite floats. Keep their original log text.
+	if f, err := strconv.ParseFloat(s, 64); err == nil && !math.IsNaN(f) && !math.IsInf(f, 0) {
 		return f
 	}
 
