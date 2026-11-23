@@ -14,8 +14,10 @@ type KeyValueParser struct {
 
 // NewKeyValueParser creates a new key-value parser.
 func NewKeyValueParser() *KeyValueParser {
-	// Match: key=value or key="value with spaces" or key='value'
-	pattern := regexp.MustCompile(`(\w+)=(?:"([^"]*)"|'([^']*)'|(\S+))`)
+	// Match: key=value or key="value with spaces" or key='value'.
+	// A key starts with a word character and may contain dots and dashes
+	// (http.status, request-id), as logfmt and OpenTelemetry attributes do.
+	pattern := regexp.MustCompile(`(\w[\w.\-]*)=(?:"([^"]*)"|'([^']*)'|(\S+))`)
 	return &KeyValueParser{pattern: pattern}
 }
 

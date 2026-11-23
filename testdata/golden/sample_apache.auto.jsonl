@@ -1,0 +1,5 @@
+{"ip":"192.168.1.1","method":"GET","path":"/index.html","protocol":"HTTP/1.1","referer":"http://example.com","size":1234,"status":200,"timestamp":"15/Jan/2024:10:30:45 +0000","user":"john","useragent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+{"ip":"192.168.1.2","method":"POST","path":"/api/login","protocol":"HTTP/1.1","size":89,"status":401,"timestamp":"15/Jan/2024:10:30:46 +0000","useragent":"curl/7.68.0"}
+{"ip":"192.168.1.3","method":"GET","path":"/dashboard","protocol":"HTTP/1.1","referer":"http://example.com/login","size":5678,"status":200,"timestamp":"15/Jan/2024:10:30:47 +0000","user":"admin","useragent":"Mozilla/5.0 (Macintosh; Intel Mac OS X)"}
+{"ip":"10.0.0.1","method":"GET","path":"/static/style.css","protocol":"HTTP/1.1","referer":"http://example.com/","size":0,"status":304,"timestamp":"15/Jan/2024:10:30:48 +0000","useragent":"Mozilla/5.0"}
+{"ip":"192.168.1.1","method":"DELETE","path":"/api/users/456","protocol":"HTTP/1.1","size":45,"status":403,"timestamp":"15/Jan/2024:10:30:49 +0000","user":"john","useragent":"Mozilla/5.0"}

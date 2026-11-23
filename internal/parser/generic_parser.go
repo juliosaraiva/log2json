@@ -18,19 +18,19 @@ func NewGenericParser() *GenericParser {
 	patterns := []*regexp.Regexp{
 		// ISO timestamp with level: 2024-01-15 10:30:45.123 INFO message
 		regexp.MustCompile(
-			`^(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?)\s+` +
+			`^(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:[.,]\d+)?(?:Z|[+-]\d{2}:?\d{2})?)\s+` +
 				`(?P<level>DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|TRACE)\s+` +
 				`(?P<message>.+)$`,
 		),
 		// Level first: INFO 2024-01-15 10:30:45 message
 		regexp.MustCompile(
 			`^(?P<level>DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|TRACE)\s+` +
-				`(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:\.\d+)?)\s+` +
+				`(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:[.,]\d+)?)\s+` +
 				`(?P<message>.+)$`,
 		),
 		// Bracketed level: [INFO] 2024-01-15 message or 2024-01-15 [INFO] message
 		regexp.MustCompile(
-			`^(?:(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:\.\d+)?)\s+)?` +
+			`^(?:(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:[.,]\d+)?)\s+)?` +
 				`\[(?P<level>DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|TRACE)\]\s+` +
 				`(?P<message>.+)$`,
 		),
@@ -56,6 +56,17 @@ func (p *GenericParser) Description() string {
 // CanParse always returns true as this is the fallback parser.
 func (p *GenericParser) CanParse(line string) bool {
 	return true
+}
+
+// Recognizes reports whether the line has a timestamp or level structure this
+// parser understands, as opposed to being accepted only as a catch-all.
+func (p *GenericParser) Recognizes(line string) bool {
+	for _, pattern := range p.patterns {
+		if pattern.MatchString(line) {
+			return true
+		}
+	}
+	return false
 }
 
 // Parse attempts to extract fields using common patterns.
