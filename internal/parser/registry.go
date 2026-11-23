@@ -101,6 +101,22 @@ func (r *Registry) ListParsers() []struct {
 	return result
 }
 
+// recognizer is implemented by a catch-all parser to separate lines whose
+// format it identified from lines it merely accepted.
+type recognizer interface {
+	Recognizes(line string) bool
+}
+
+// recognizes reports whether a successful parse identified the stream format.
+// A catch-all accepting an unstructured line (a banner, a blank separator)
+// says nothing about the lines that follow, so it must not be cached.
+func recognizes(p Parser, line string) bool {
+	if r, ok := p.(recognizer); ok {
+		return r.Recognizes(line)
+	}
+	return true
+}
+
 // Parse parses a log line using the appropriate parser.
 // Uses forced format if specified, otherwise auto-detects.
 func (r *Registry) Parse(line string) (*Entry, error) {
@@ -131,7 +147,7 @@ func (r *Registry) Parse(line string) (*Entry, error) {
 			entry, err := p.Parse(line)
 			if err == nil && entry.ParseError == nil {
 				// Cache successful parser in strict mode
-				if !r.adaptive && r.cached == nil {
+				if !r.adaptive && r.cached == nil && recognizes(p, line) {
 					r.cached = p
 				}
 				return entry, nil

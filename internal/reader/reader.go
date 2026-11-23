@@ -28,7 +28,7 @@ type Line struct {
 // StreamReader reads lines from an io.Reader in a streaming fashion.
 // Designed for processing stdin in real-time (pipe-friendly).
 type StreamReader struct {
-	scanner    *bufio.Scanner
+	input      *bufio.Reader
 	lineNumber int
 	maxSize    int
 }
@@ -36,8 +36,9 @@ type StreamReader struct {
 // Option configures the StreamReader.
 type Option func(*StreamReader)
 
-// WithMaxLineSize sets the maximum allowed line size.
-// Lines exceeding this are truncated with an error.
+// WithMaxLineSize sets the maximum allowed line size in bytes.
+// A longer line is reported as a Line with Err set to bufio.ErrTooLong and
+// empty Text; reading continues with the line after it.
 func WithMaxLineSize(size int) Option {
 	return func(r *StreamReader) {
 		r.maxSize = size
@@ -56,17 +57,64 @@ func New(input io.Reader, opts ...Option) *StreamReader {
 		opt(reader)
 	}
 
-	// Create scanner with custom buffer
-	scanner := bufio.NewScanner(input)
-	buf := make([]byte, DefaultBufferSize)
-	scanner.Buffer(buf, reader.maxSize)
-
-	reader.scanner = scanner
+	reader.input = bufio.NewReaderSize(input, DefaultBufferSize)
 	return reader
 }
 
+// next reads one line. It returns false when the input is exhausted.
+// An oversized line is consumed to its end and returned with Err set, so one
+// bad line never hides the lines after it. Any other read error ends the input.
+func (r *StreamReader) next() (Line, bool) {
+	var text []byte
+	tooLong := false
+	sawData := false
+
+	for {
+		fragment, err := r.input.ReadSlice('\n')
+		if len(fragment) > 0 {
+			sawData = true
+			if !tooLong {
+				text = append(text, fragment...)
+				if len(trimLineEnding(text)) > r.maxSize {
+					tooLong = true
+					text = nil
+				}
+			}
+		}
+
+		switch err {
+		case nil:
+		case bufio.ErrBufferFull:
+			continue
+		case io.EOF:
+			if !sawData {
+				return Line{}, false
+			}
+		default:
+			r.lineNumber++
+			return Line{Number: r.lineNumber, Err: err}, true
+		}
+
+		r.lineNumber++
+		if tooLong {
+			return Line{Number: r.lineNumber, Err: bufio.ErrTooLong}, true
+		}
+		return Line{Text: string(trimLineEnding(text)), Number: r.lineNumber}, true
+	}
+}
+
+func trimLineEnding(line []byte) []byte {
+	if n := len(line); n > 0 && line[n-1] == '\n' {
+		line = line[:n-1]
+	}
+	if n := len(line); n > 0 && line[n-1] == '\r' {
+		line = line[:n-1]
+	}
+	return line
+}
+
 // Lines returns a channel that yields lines as they are read.
-// The channel is closed when EOF is reached or an error occurs.
+// The channel is closed when EOF is reached or a read fails.
 // This method should only be called once per reader.
 func (r *StreamReader) Lines() <-chan Line {
 	lines := make(chan Line)
@@ -74,19 +122,14 @@ func (r *StreamReader) Lines() <-chan Line {
 	go func() {
 		defer close(lines)
 
-		for r.scanner.Scan() {
-			r.lineNumber++
-			lines <- Line{
-				Text:   r.scanner.Text(),
-				Number: r.lineNumber,
+		for {
+			line, ok := r.next()
+			if !ok {
+				return
 			}
-		}
-
-		// Check for scanner errors (not EOF)
-		if err := r.scanner.Err(); err != nil {
-			lines <- Line{
-				Number: r.lineNumber + 1,
-				Err:    err,
+			lines <- line
+			if line.Err != nil && line.Err != bufio.ErrTooLong {
+				return
 			}
 		}
 	}()
@@ -96,20 +139,22 @@ func (r *StreamReader) Lines() <-chan Line {
 
 // ReadAll reads all lines synchronously and returns them as a slice.
 // Useful for testing; for production use Lines() for streaming.
+// The returned error is the first line error encountered, if any.
 func (r *StreamReader) ReadAll() ([]Line, error) {
 	var lines []Line
+	var firstErr error
 
-	for r.scanner.Scan() {
-		r.lineNumber++
-		lines = append(lines, Line{
-			Text:   r.scanner.Text(),
-			Number: r.lineNumber,
-		})
+	for {
+		line, ok := r.next()
+		if !ok {
+			return lines, firstErr
+		}
+		if line.Err != nil && firstErr == nil {
+			firstErr = line.Err
+		}
+		if line.Err != nil && line.Err != bufio.ErrTooLong {
+			return lines, firstErr
+		}
+		lines = append(lines, line)
 	}
-
-	if err := r.scanner.Err(); err != nil {
-		return lines, err
-	}
-
-	return lines, nil
 }

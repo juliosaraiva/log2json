@@ -1,0 +1,5 @@
+{"env":"production","level":"info","msg":"Server started","port":8080,"time":"2024-01-15T10:30:45Z"}
+{"duration":0.023,"level":"debug","method":"GET","msg":"Processing request","path":"/api/users","time":"2024-01-15T10:30:46Z"}
+{"ip":"192.168.1.100","level":"info","msg":"User authenticated","time":"2024-01-15T10:30:47Z","user_id":12345}
+{"level":"warn","msg":"Slow query detected","query_time":2.5,"table":"orders","time":"2024-01-15T10:30:48Z"}
+{"host":"cache.local","level":"error","msg":"Connection refused","port":6379,"retry":3,"time":"2024-01-15T10:30:49Z"}

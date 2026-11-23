@@ -1,0 +1,5 @@
+{"level":"info","msg":"json line","ts":"2024-01-15T10:30:45Z"}
+{"host":"webserver","message":"GET /index.html 200","pid":1234,"program":"nginx","timestamp":"Jan 15 10:30:46"}
+{"env":"production","level":"info","msg":"kv line","port":8080}
+{"ip":"192.168.1.1","method":"GET","path":"/dashboard","protocol":"HTTP/1.1","referer":"http://example.com","size":5432,"status":200,"timestamp":"15/Jan/2024:10:30:48 +0000","user":"admin","useragent":"Mozilla/5.0"}
+{"level":"INFO","message":"Generic format log message","timestamp":"2024-01-15 10:30:49"}
