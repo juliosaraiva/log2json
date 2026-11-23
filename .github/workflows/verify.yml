@@ -1,0 +1,32 @@
+name: Verify
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Invariants, architecture, golden corpus, fuzz
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: false
+
+      - name: Architecture rules
+        run: go test -count=1 ./internal/archtest
+
+      - name: Golden corpus
+        run: go test -count=1 ./cmd/log2json -run TestGoldenCorpus
+
+      - name: Invariants
+        run: go test -count=1 ./cmd/log2json -run TestInvariants
+
+      - name: Fuzz
+        run: go test ./cmd/log2json -run '^$' -fuzz FuzzPipelineInvariants -fuzztime 60s

@@ -1,0 +1,37 @@
+
+=== gofmt: check_gofmt
+gofmt clean
+
+=== go vet: go vet ./...
+
+=== lint: check_lint
+Error: can't load config: unsupported version of the configuration: "" See https://golangci-lint.run/docs/product/migration-guide for migration instructions
+The command is terminated due to an error: can't load config: unsupported version of the configuration: "" See https://golangci-lint.run/docs/product/migration-guide for migration instructions
+
+=== tests (race): go test -race -count=1 ./...
+ok  	github.com/juliosaraiva/log2json/cmd/log2json	9.365s
+ok  	github.com/juliosaraiva/log2json/internal/archtest	1.076s
+ok  	github.com/juliosaraiva/log2json/internal/emitter	1.024s
+ok  	github.com/juliosaraiva/log2json/internal/parser	1.060s
+ok  	github.com/juliosaraiva/log2json/internal/reader	1.060s
+
+=== architecture: go test -count=1 ./internal/archtest
+ok  	github.com/juliosaraiva/log2json/internal/archtest	0.008s
+
+=== golden corpus: go test -count=1 ./cmd/log2json -run TestGoldenCorpus
+ok  	github.com/juliosaraiva/log2json/cmd/log2json	0.009s
+
+=== fuzz 15s: go test ./cmd/log2json -run ^$ -fuzz FuzzPipelineInvariants -fuzztime 15s
+fuzz: elapsed: 0s, gathering baseline coverage: 0/19 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 19/19 completed, now fuzzing with 2 workers
+fuzz: elapsed: 3s, execs: 571 (190/sec), new interesting: 5 (total: 24)
+fuzz: elapsed: 6s, execs: 571 (0/sec), new interesting: 5 (total: 24)
+fuzz: elapsed: 9s, execs: 571 (0/sec), new interesting: 5 (total: 24)
+fuzz: elapsed: 12s, execs: 571 (0/sec), new interesting: 5 (total: 24)
+fuzz: elapsed: 15s, execs: 571 (0/sec), new interesting: 5 (total: 24)
+fuzz: elapsed: 16s, execs: 571 (0/sec), new interesting: 5 (total: 24)
+PASS
+ok  	github.com/juliosaraiva/log2json/cmd/log2json	16.086s
+
+=== built binary: check_binary
+built binary: 38 lines in, 38 JSON objects out
