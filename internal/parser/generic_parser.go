@@ -58,6 +58,17 @@ func (p *GenericParser) CanParse(line string) bool {
 	return true
 }
 
+// Recognizes reports whether the line has a timestamp or level structure this
+// parser understands, as opposed to being accepted only as a catch-all.
+func (p *GenericParser) Recognizes(line string) bool {
+	for _, pattern := range p.patterns {
+		if pattern.MatchString(line) {
+			return true
+		}
+	}
+	return false
+}
+
 // Parse attempts to extract fields using common patterns.
 // Falls back to wrapping the line as "message" if no pattern matches.
 func (p *GenericParser) Parse(line string) (*Entry, error) {
