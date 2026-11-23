@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"bytes"
 	"encoding/json"
 	"strings"
 )
@@ -37,12 +38,25 @@ func (p *JSONParser) CanParse(line string) bool {
 func (p *JSONParser) Parse(line string) (*Entry, error) {
 	entry := NewEntry(line)
 
-	// Unmarshal into the fields map directly
-	if err := json.Unmarshal([]byte(line), &entry.Fields); err != nil {
+	if err := decodeObject(line, &entry.Fields); err != nil {
 		entry.ParseError = err
 		entry.Fields["raw"] = line
 		entry.Fields["_parseError"] = err.Error()
 	}
 
 	return entry, nil
+}
+
+// decodeObject decodes the single JSON value in line into fields.
+// Numbers are kept as json.Number so their digits reach the output unchanged;
+// decoding into float64 silently rounds integers above 2^53.
+func decodeObject(line string, fields *map[string]any) error {
+	data := []byte(line)
+	if !json.Valid(data) {
+		var discard any
+		return json.Unmarshal(data, &discard)
+	}
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.UseNumber()
+	return decoder.Decode(fields)
 }
