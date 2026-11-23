@@ -18,19 +18,19 @@ func NewGenericParser() *GenericParser {
 	patterns := []*regexp.Regexp{
 		// ISO timestamp with level: 2024-01-15 10:30:45.123 INFO message
 		regexp.MustCompile(
-			`^(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?)\s+` +
+			`^(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:[.,]\d+)?(?:Z|[+-]\d{2}:?\d{2})?)\s+` +
 				`(?P<level>DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|TRACE)\s+` +
 				`(?P<message>.+)$`,
 		),
 		// Level first: INFO 2024-01-15 10:30:45 message
 		regexp.MustCompile(
 			`^(?P<level>DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|TRACE)\s+` +
-				`(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:\.\d+)?)\s+` +
+				`(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:[.,]\d+)?)\s+` +
 				`(?P<message>.+)$`,
 		),
 		// Bracketed level: [INFO] 2024-01-15 message or 2024-01-15 [INFO] message
 		regexp.MustCompile(
-			`^(?:(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:\.\d+)?)\s+)?` +
+			`^(?:(?P<timestamp>\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:[.,]\d+)?)\s+)?` +
 				`\[(?P<level>DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|TRACE)\]\s+` +
 				`(?P<message>.+)$`,
 		),
