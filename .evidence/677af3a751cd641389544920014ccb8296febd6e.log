@@ -1,0 +1,38 @@
+
+=== gofmt: check_gofmt
+gofmt clean
+
+=== go vet: go vet ./...
+
+=== lint: check_lint
+local golangci-lint is v2 and cannot read the v1 config; running the equivalent linter set
+0 issues.
+golangci-lint v2 equivalent set clean
+
+=== tests (race): go test -race -count=1 ./...
+ok  	github.com/juliosaraiva/log2json/cmd/log2json	8.702s
+ok  	github.com/juliosaraiva/log2json/internal/archtest	1.058s
+ok  	github.com/juliosaraiva/log2json/internal/emitter	1.016s
+ok  	github.com/juliosaraiva/log2json/internal/parser	1.052s
+ok  	github.com/juliosaraiva/log2json/internal/reader	1.056s
+
+=== architecture: go test -count=1 ./internal/archtest
+ok  	github.com/juliosaraiva/log2json/internal/archtest	0.007s
+
+=== golden corpus: go test -count=1 ./cmd/log2json -run TestGoldenCorpus
+ok  	github.com/juliosaraiva/log2json/cmd/log2json	0.008s
+
+=== fuzz 15s: go test ./cmd/log2json -run ^$ -fuzz FuzzPipelineInvariants -fuzztime 15s
+fuzz: elapsed: 0s, gathering baseline coverage: 0/24 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 24/24 completed, now fuzzing with 2 workers
+fuzz: elapsed: 3s, execs: 91 (30/sec), new interesting: 2 (total: 26)
+fuzz: elapsed: 6s, execs: 342 (84/sec), new interesting: 3 (total: 27)
+fuzz: elapsed: 9s, execs: 342 (0/sec), new interesting: 3 (total: 27)
+fuzz: elapsed: 12s, execs: 342 (0/sec), new interesting: 3 (total: 27)
+fuzz: elapsed: 15s, execs: 342 (0/sec), new interesting: 3 (total: 27)
+fuzz: elapsed: 16s, execs: 342 (0/sec), new interesting: 3 (total: 27)
+PASS
+ok  	github.com/juliosaraiva/log2json/cmd/log2json	16.033s
+
+=== built binary: check_binary
+built binary: 38 lines in, 38 JSON objects out

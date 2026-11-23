@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"encoding/json"
 	"testing"
 )
 
@@ -92,8 +93,8 @@ func TestJSONParser_Parse(t *testing.T) {
 			name: "numbers and booleans",
 			line: `{"count": 42, "pi": 3.14, "ok": true}`,
 			wantFields: map[string]any{
-				"count": float64(42),
-				"pi":    float64(3.14),
+				"count": json.Number("42"),
+				"pi":    json.Number("3.14"),
 				"ok":    true,
 			},
 			wantParseError: false,
