@@ -19,7 +19,7 @@ func NewApacheParser() *ApacheParser {
 			`(?P<ident>\S+)\s+` + // Ident (usually -)
 			`(?P<user>\S+)\s+` + // User (usually -)
 			`\[(?P<timestamp>[^\]]+)\]\s+` + // Timestamp in brackets
-			`"(?P<method>\S+)\s+(?P<path>\S+)\s+(?P<protocol>[^"]+)"\s+` + // Request line
+			`"(?:(?P<method>\S+)\s+(?P<path>\S+)\s+(?P<protocol>[^"]+)|(?P<request>[^"]*))"\s+` + // Request line, or whatever was logged in its place
 			`(?P<status>\d+)\s+` + // Status code
 			`(?P<size>\S+)` + // Response size (or -)
 			`(?:\s+"(?P<referer>[^"]*)"\s+"(?P<useragent>[^"]*)")?`, // Optional referer and user agent
