@@ -1,0 +1,6 @@
+{"host":"webserver","message":"192.168.1.100 - - \"GET /api/users HTTP/1.1\" 200 1532","pid":1234,"program":"nginx","timestamp":"Jan 15 10:30:45"}
+{"host":"webserver","message":"Accepted password for admin from 10.0.0.5 port 22 ssh2","pid":5678,"program":"sshd","timestamp":"Jan 15 10:30:46"}
+{"host":"dbserver","message":"Query completed in 0.023s","pid":9012,"program":"mysql","timestamp":"Jan 15 10:30:47"}
+{"host":"appserver","message":"[INFO] User login successful user_id=123","pid":3456,"program":"app","timestamp":"Jan 15 10:30:48"}
+{"host":"webserver","message":"192.168.1.101 - - \"POST /api/orders HTTP/1.1\" 201 256","pid":1234,"program":"nginx","timestamp":"Jan 15 10:30:49"}
+{"host":"appserver","message":"[ERROR] Database connection timeout after 30s","pid":3456,"program":"app","timestamp":"Jan 15 10:30:50"}

@@ -9,7 +9,7 @@ GO := go
 # Build flags
 LDFLAGS := -ldflags "-X main.version=$(VERSION)"
 
-.PHONY: all build clean test coverage lint vet check release version run install help
+.PHONY: all build clean test coverage lint vet check verify ledger release version run install help
 
 # Default target
 all: build
@@ -54,6 +54,14 @@ vet:
 check: lint vet test
 	@echo "All checks passed."
 
+# Run every gate against HEAD and record evidence for the exact patch
+verify:
+	@scripts/verify.sh
+
+# Show pull request and revert counts
+ledger:
+	@scripts/ledger.sh
+
 # Create a new release (usage: make release V=x.y.z)
 release:
 ifndef V
@@ -87,6 +95,8 @@ help:
 	@echo "  lint      - Run golangci-lint"
 	@echo "  vet       - Run go vet"
 	@echo "  check     - Run lint + vet + test (pre-push validation)"
+	@echo "  verify    - Run all gates on HEAD and record evidence"
+	@echo "  ledger    - Show pull request and revert counts"
 	@echo "  release   - Create a release tag (usage: make release V=x.y.z)"
 	@echo "  version   - Show current version"
 	@echo "  run       - Build and run with sample input"

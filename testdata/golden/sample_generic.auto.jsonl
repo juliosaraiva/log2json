@@ -1,0 +1,6 @@
+{"level":"INFO","message":"Application started successfully","timestamp":"2024-01-15 10:30:45"}
+{"level":"ERROR","message":"Something failed unexpectedly","timestamp":"2024-01-15T10:30:46Z"}
+{"level":"INFO","message":"Processing request completed","timestamp":"2024-01-15 10:30:47"}
+{"level":"WARN","message":"Configuration file missing, using defaults"}
+{"level":"ERROR","message":"disk full, cannot write to log"}
+{"level":"DEBUG","message":"verbose debug message here"}
